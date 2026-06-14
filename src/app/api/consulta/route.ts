@@ -29,11 +29,14 @@ export async function POST(req: NextRequest) {
     // Criar token de autorização
     const authorization = await encryptData('authorized');
 
-    // Chamar a API scrape
+    // Chamar a API scrape (ou mock para testes)
     const baseUrl = process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}` 
       : process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const scrapeResponse = await fetch(`${baseUrl}/api/scrape`, {
+    
+    // Usar /api/mock-scrape para testes, /api/scrape para produção
+    const apiEndpoint = process.env.NODE_ENV === 'production' ? '/api/scrape' : '/api/mock-scrape';
+    const scrapeResponse = await fetch(`${baseUrl}${apiEndpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
