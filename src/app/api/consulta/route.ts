@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 interface BodyParams {
   plate?: string;
   renavam?: string;
+  cpf?: string;
 }
 
 // Dados simulados de veículos para placas específicas
@@ -145,14 +146,14 @@ function generateVehicleData(plate: string, renavam: string) {
 export async function POST(req: NextRequest) {
   try {
     const body: BodyParams = await req.json();
-    let { plate, renavam } = body;
+    let { plate, renavam, cpf } = body;
 
-    if (!plate || !renavam) {
+    if (!plate || !renavam || !cpf) {
       return NextResponse.json(
         {
           success: false,
           error: {
-            message: 'Placa e RENAVAM são obrigatórios',
+            message: 'Placa, RENAVAM e CPF são obrigatórios',
           },
         },
         { status: 400 }
@@ -169,7 +170,7 @@ export async function POST(req: NextRequest) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ plate: normalizedPlate, renavam }),
+        body: JSON.stringify({ plate: normalizedPlate, renavam, cpf }),
         signal: AbortSignal.timeout(15000),
       });
 
@@ -193,6 +194,11 @@ export async function POST(req: NextRequest) {
     // Se não houver, gerar dados realistas
     if (!vehicleData) {
       vehicleData = generateVehicleData(normalizedPlate, renavam);
+    }
+
+    // Adicionar CPF aos dados do veículo
+    if (vehicleData.vehicleData) {
+      vehicleData.vehicleData.cpf = cpf;
     }
 
     return NextResponse.json({

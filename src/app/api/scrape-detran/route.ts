@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { plate, renavam } = await req.json();
+    const { plate, renavam, cpf } = await req.json();
 
-    if (!plate || !renavam) {
+    if (!plate || !renavam || !cpf) {
       return NextResponse.json(
-        { error: 'Placa e RENAVAM são obrigatórios' },
+        { error: 'Placa, RENAVAM e CPF são obrigatórios' },
         { status: 400 }
       );
     }
@@ -21,11 +21,13 @@ export async function POST(req: NextRequest) {
     try {
       const response = await axios.post(detranUrl, {
         placa: plate.toUpperCase(),
-        renavam: renavam
+        renavam: renavam,
+        cpf: cpf.replace(/[^\d]/g, '') // Remove formatação do CPF
       }, {
         timeout: 15000,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
 
@@ -36,7 +38,8 @@ export async function POST(req: NextRequest) {
         plate: plate.toUpperCase(),
         model: $('.modelo').text() || 'Não informado',
         year: $('.ano').text() || 'Não informado',
-        owner: $('.proprietario').text() || 'Não informado'
+        owner: $('.proprietario').text() || 'Não informado',
+        cpf: cpf
       };
 
       // Extrair débitos
@@ -56,7 +59,7 @@ export async function POST(req: NextRequest) {
       });
     } catch (scraperError) {
       // Se o scraping falhar, retornar dados mock
-      console.log('Scraping falhou, usando dados mock');
+      console.log('Scraping falhou, usando dados mock:', scraperError);
       
       return NextResponse.json({
         success: true,
@@ -65,7 +68,8 @@ export async function POST(req: NextRequest) {
             plate: plate.toUpperCase(),
             model: 'Veículo',
             year: '2020',
-            owner: 'Proprietário'
+            owner: 'Proprietário',
+            cpf: cpf
           },
           debts: {
             ipva: 'Sem débitos',
