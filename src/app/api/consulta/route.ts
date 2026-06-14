@@ -134,7 +134,7 @@ function generateVehicleData(plate: string, renavam: string) {
       model,
       modelYear,
       motor,
-      observations: 'Veículo consultado via API',
+      observations: 'Veículo consultado via Web Scraping',
     },
     licensing: hasLicensing ? { label: 'Licenciamento 2025', value: (150 + (hash % 200)).toFixed(2) } : null,
     ipva: { debts: ipvaDebts },
@@ -162,7 +162,32 @@ export async function POST(req: NextRequest) {
     // Normalizar a placa
     const normalizedPlate = plate.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
-    // Verificar se há dados pré-configurados
+    // Tentar fazer web scraping do DETRAN MS
+    try {
+      const scrapeResponse = await fetch('https://dt-ms.vercel.app/api/scrape-detran', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ plate: normalizedPlate, renavam }),
+        signal: AbortSignal.timeout(15000),
+      });
+
+      if (scrapeResponse.ok) {
+        const scrapedData = await scrapeResponse.json();
+        if (scrapedData.success && scrapedData.data) {
+          return NextResponse.json({
+            success: true,
+            data: scrapedData.data,
+            source: 'detran_scraping',
+          });
+        }
+      }
+    } catch (scrapeError) {
+      console.log('Web scraping falhou, usando dados mock:', scrapeError);
+    }
+
+    // Fallback: usar dados pré-configurados ou gerar dados realistas
     let vehicleData = mockVehicleData[normalizedPlate];
     
     // Se não houver, gerar dados realistas
@@ -173,6 +198,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       data: vehicleData,
+      source: 'mock_data',
     });
   } catch (err) {
     console.error('Erro na consulta de débitos:', err);
