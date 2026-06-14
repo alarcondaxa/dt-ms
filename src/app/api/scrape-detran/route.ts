@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Gerar dados realistas baseado na placa
-    const hash = plate.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = plate.split('').reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
     
     const carModels = ['HB20', 'Gol', 'Onix', 'Sandero', 'Sprinter', 'Fiesta', 'Polo', 'Civic', 'Corolla'];
     const cities = ['Campo Grande', 'Dourados', 'Três Lagoas', 'Corumbá', 'Ponta Porã', 'Maracaju', 'Cuiabá'];

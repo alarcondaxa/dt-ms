@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Fallback: retornar dados mock
-    const hash = normalizedPlate.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = normalizedPlate.split('').reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
     
     const carModels = ['HB20', 'Gol', 'Onix', 'Sandero', 'Sprinter', 'Fiesta', 'Polo', 'Civic', 'Corolla'];
     const cities = ['Campo Grande', 'Dourados', 'Três Lagoas', 'Corumbá', 'Ponta Porã', 'Maracaju', 'Cuiabá'];
