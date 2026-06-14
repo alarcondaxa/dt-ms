@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
       ? `https://${process.env.VERCEL_URL}` 
       : process.env.NEXTAUTH_URL || 'http://localhost:3000';
     
-    // Usar /api/mock-scrape para testes, /api/scrape para produção
-    const apiEndpoint = process.env.NODE_ENV === 'production' ? '/api/scrape' : '/api/mock-scrape';
+    // Usar /api/mock-scrape para testes
+    const apiEndpoint = '/api/mock-scrape';
     const scrapeResponse = await fetch(`${baseUrl}${apiEndpoint}`, {
       method: 'POST',
       headers: {
