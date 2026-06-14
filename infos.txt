@@ -1,0 +1,21 @@
+Placa/Renavam: dwh0128/00989311155
+
+Placa/Renavam: evf9610/00328937630
+
+"plate": "hrs6j08",
+"renavam": "00916663051"
+
+"plate": "hte5327",
+"renavam": "00121438481"
+
+"plate": "smb1g32",
+"renavam": "01398603080"
+
+"plate": "lra8i58",
+"renavam": "00598608796"
+
+"plate": "qal4911",
+"renavam": "01160085029"
+
+"plate": "htr3i80",
+"renavam": "00206253516"
