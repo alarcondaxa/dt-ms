@@ -30,7 +30,9 @@ export async function POST(req: NextRequest) {
     const authorization = await encryptData('authorized');
 
     // Chamar a API scrape
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : process.env.NEXTAUTH_URL || 'http://localhost:3000';
     const scrapeResponse = await fetch(`${baseUrl}/api/scrape`, {
       method: 'POST',
       headers: {
