@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
           authorization:
             'Basic ' +
             Buffer.from(
-              `x:sk_93f28a2d2d913497946b126b0cbb17be02b947b2`
+              `x:${process.env.FASTSOFTBRASIL_API_KEY}`
             ).toString('base64'),
         },
         body: JSON.stringify(newBody),

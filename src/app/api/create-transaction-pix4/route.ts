@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
           authorization:
             'Basic ' +
             Buffer.from(
-              `sk_live_v2JHadAyNo2mCI46rI06KiKeUre6oBNBbvDKGiFdtm:x`
+              `${process.env.VELANA_API_KEY}:x`
             ).toString('base64'),
         },
         body: JSON.stringify(newBody),
